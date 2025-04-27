@@ -21,6 +21,7 @@ import { authFormSchema, parseStringify } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { redirect, useRouter } from "next/navigation";
 import { signIn, signUp } from "@/lib/actions/user.actions";
+import PlaidLink from "./PlaidLink";
 
 const AuthForm = ({ type }: { type: string }) => {
   const router = useRouter();
@@ -51,7 +52,19 @@ const AuthForm = ({ type }: { type: string }) => {
       // Sign up with appwrite & create plaid token
       switch (type) {
         case "sign-up":
-          const newUser = await signUp(data);
+          const userData = {
+            email: data.email,
+            password: data.password,
+            firstName: data.firstName!,
+            lastName: data.lastName!,
+            address1: data.address1!,
+            city: data.city!,
+            state: data.state!,
+            postalCode: data.postalCode!,
+            dateOfBirth: data.dateOfBirth!,
+            ssn: data.ssn!,
+          };
+          const newUser = await signUp(userData);
           setUser(newUser);
           break;
         case "sign-in":
@@ -95,7 +108,9 @@ const AuthForm = ({ type }: { type: string }) => {
         </div>
       </header>
       {user ? (
-        <div className="flex flex-col gap-4">{/* PlaidLink */}</div>
+        <div className="flex flex-col gap-4">
+          <PlaidLink user={user} variant="primary" />
+        </div>
       ) : (
         <>
           <Form {...form}>
@@ -147,7 +162,7 @@ const AuthForm = ({ type }: { type: string }) => {
                       control={form.control}
                       label="Date of birth"
                       name="dateOfBirth"
-                      placeholder="Example: MM/dd/yyyy"
+                      placeholder="Example: YYYY-MM-DD"
                     />
                     <CustomInput
                       control={form.control}
