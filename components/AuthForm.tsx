@@ -75,7 +75,6 @@ const AuthForm = ({ type }: { type: string }) => {
 
           if (response) {
             const user = parseStringify(response);
-            console.log(user);
 
             router.push("/");
           }
